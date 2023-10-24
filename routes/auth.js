@@ -3,6 +3,7 @@ const router = express.Router(); // Import the router module from express
 const User = require("../models/User"); // Import the User model
 const { body, validationResult } = require("express-validator"); // Import validators
 const bcrypt = require("bcryptjs"); // Import the bcrypt module (for hashing)
+const jwt = require("jsonwebtoken"); // Import the JSON Web Token library
 
 // Validation middleware for user registration
 const validateRegistration = [
@@ -15,6 +16,9 @@ const validateRegistration = [
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters long"),
 ];
+
+// Secret key for JWT
+const jwtSecret = "YashKumarKasaudhan";
 
 // Route for user registration
 //Create a User using : POST "/api/auth/". Don't require Auth
@@ -45,8 +49,9 @@ router.post("/", validateRegistration, async (req, res) => {
       password: hashedPassword, //store the hashed password in the database
     });
 
+    const authtoken = jwt.sign({ userId: newUser.id }, jwtSecret);
     // You can add additional logic here (e.g., generate tokens, send responses)
-    res.status(201).json(newUser); // Respond with the newly created user
+    res.status(201).json({ authtoken }); // Respond with the newly created user
   } catch (error) {
     console.error("Error registering user:", error);
     res.status(500).json({ error: "User registration failed" });
