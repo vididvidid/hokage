@@ -2,6 +2,7 @@ const express = require("express"); // Import express
 const router = express.Router(); // Import the router module from express
 const User = require("../models/User"); // Import the User model
 const { body, validationResult } = require("express-validator"); // Import validators
+const bcrypt = require("bcryptjs"); // Import the bcrypt module (for hashing)
 
 // Validation middleware for user registration
 const validateRegistration = [
@@ -25,18 +26,23 @@ router.post("/", validateRegistration, async (req, res) => {
 
   try {
     const { username, email, password } = req.body;
-
+    console.log(password);
     // Check if the email already exists
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ error: "Email ID already exists" });
     }
 
+    //generate the salt
+    const salt = await bcrypt.genSalt(10);
+    //hash teh password with bcrypt
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     // Create a new user using the User model
     const newUser = await User.create({
       username,
       email,
-      password,
+      password: hashedPassword, //store the hashed password in the database
     });
 
     // You can add additional logic here (e.g., generate tokens, send responses)
