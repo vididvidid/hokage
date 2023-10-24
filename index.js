@@ -1,4 +1,4 @@
-const sequelize = require("./dbWithSequelize");
+const sequelize = require("./config/dbWithSequelize");
 //const {createSqlConnection} = require('./db');
 const express = require("express");
 

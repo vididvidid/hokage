@@ -1,7 +1,7 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../dbWithSequelize'); // Assuming your db.js file is in the parent directory
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/dbWithSequelize"); // Assuming your db.js file is in the parent directory
 
-const User = sequelize.define('User', {
+const User = sequelize.define("User", {
   // Define the User model properties and their data types
   id: {
     type: DataTypes.INTEGER,
@@ -35,10 +35,10 @@ const User = sequelize.define('User', {
 // Create the user table in the database
 User.sync()
   .then(() => {
-    console.log('User table created successfully.');
+    console.log("User table created successfully.");
   })
   .catch((error) => {
-    console.error('Error creating User table:', error);
+    console.error("Error creating User table:", error);
   });
 
-module.exports = User;  
+module.exports = User;
