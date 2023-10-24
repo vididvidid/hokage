@@ -8,6 +8,7 @@ function createSqlConnection(){
     host: 'localhost',  // Your MySQL server's host
     user: 'root', // Your MySQL username
     password: 'Yash@1234', // Your MySQL password
+    database:'infinity'//your database name
   });
   
   // Connect to MySQL
