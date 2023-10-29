@@ -15,8 +15,16 @@ const validateRegistrationRule = ()=>{
     .withMessage("Password must be at least 6 characters long"),
 ]};
 
-//function to validate the validationRegistration
-const validateRegistration = (req, res, next) => {
+const validateLoginRule = ()=>{
+  return [
+  body('email').isEmail().withMessage("Invalid email address"),
+  body('password')
+    .exists()
+    .withMessage("Password can't be empty"),
+]};
+
+//function to validate
+const validate = (req, res, next) => {
   const errors = validationResult(req)
   if (errors.isEmpty()) {
     return next()
@@ -27,9 +35,11 @@ const validateRegistration = (req, res, next) => {
   return res.status(422).json({
     errors: extractedErrors,
   })
-}
+};
+
 
 module.exports = {
   validateRegistrationRule,
-  validateRegistration,
+  validate,
+  validateLoginRule,
 };
