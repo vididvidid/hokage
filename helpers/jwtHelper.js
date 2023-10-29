@@ -1,6 +1,9 @@
 const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+dotenv.config();
 
-const jwtSecret = "YashKumarKasaudhan"; // Replace with a secure key in production
+// Access the JWT secret key from the environment variables
+const jwtSecret = process.env.JWT_SECRET;
 
 const generateToken = (userId) => {
   return jwt.sign({ userId }, jwtSecret);

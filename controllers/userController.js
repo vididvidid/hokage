@@ -31,7 +31,7 @@ async function registerUser(req, res) {
     });
     const data = {
       user:{
-        id:user.id
+        id:User.id
       }
     }
     const authtoken = generateToken(data);
@@ -85,10 +85,23 @@ async function loginUser(req, res) {
 }
 
 
-
+async function getUser(req,res){
+  try {
+      userId = req.user.id;
+      //console.log(userId);
+      const user = await User.findByPk(userId,{
+          attributes: { exclude: ["password"] }, // Exclude the "password" field
+        });
+      res.send(user);
+  } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "User registration failed" });
+  }
+}
 
 
 module.exports = {
   registerUser,
-  loginUser
+  loginUser,
+  getUser
 };
