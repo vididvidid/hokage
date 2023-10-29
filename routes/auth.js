@@ -1,9 +1,11 @@
 const express = require("express"); // Import express
 const router = express.Router(); // Import the router module from express
-const {validateRegistrationRule,validate,validateLoginRule}= require("../middleware/validationMiddleware");
-const { registerUser,loginUser,getUser } = require("../controllers/userController");
 const { validationResult } = require("express-validator");
 const res = require("express/lib/response");
+const {validateRegistrationRule,validate,validateLoginRule}= require("../middleware/validationMiddleware");
+const {registerUser} = require("../controllers/registerUserController");
+const {loginUser} = require("../controllers/loginUserController");
+const {getUser} = require("../controllers/getUserController");
 const {fetchuser} = require("../middleware/fetchUser");
 
 
