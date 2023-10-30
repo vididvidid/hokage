@@ -1,7 +1,9 @@
 const User = require("../models/User");
+const Notification = require("../models/Notification");
 const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
 const { generateToken } = require("../helpers/jwtHelper");
+const {createNotification} = require("./createNotificationController");
 
 async function registerUser(req, res) {
   // Your user registration logic here, including validation, password hashing, and token generation
@@ -29,6 +31,7 @@ async function registerUser(req, res) {
       email,
       password: hashedPassword, //store the hashed password in the database
     });
+    await createNotification(newUser.id, 'registration_success');
     const data = {
       user:{
         id:User.id

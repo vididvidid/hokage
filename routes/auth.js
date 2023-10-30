@@ -11,7 +11,7 @@ const {getUser} = require("../controllers/getUserController");
 const {fetchuser} = require("../middleware/fetchUser");
 const { deleteUser } = require("../controllers/deleteUserController");
 const { updateUsername } = require("../controllers/updateUsernameController");
-
+const {getAllNotifications} = require("../controllers/getAllNotificationController");
 
 //ROUTE 1: Create a User using : POST "/api/auth/createuser". Don't require Auth
 router.post("/createuser", validateRegistrationRule(),validate, registerUser);
@@ -23,6 +23,9 @@ router.post("/getuser",fetchuser ,getUser);
 router.delete("/deleteuser", fetchuser, deleteUser);
 // ROUTE 5: Update username using : PUT "/api/auth/updateusername". Login required
 router.put("/updateusername", fetchuser, updateUsername);
+// ROUTE 6: Get all notifications for a user using: GET "/api/auth/allnotifications"
+router.get("/allnotifications", fetchuser, getAllNotifications);
+
 
 
 module.exports = router; // Export the router

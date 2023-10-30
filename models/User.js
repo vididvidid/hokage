@@ -1,5 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/dbWithSequelize"); // Assuming your db.js file is in the parent directory
+const Notification = require("./Notification");
+
 
 const User = sequelize.define("User", {
   // Define the User model properties and their data types
@@ -40,5 +42,8 @@ User.sync()
   .catch((error) => {
     console.error("Error creating User table:", error);
   });
+
+User.hasMany(Notification, { foreignKey: 'userId' });
+Notification.belongsTo(User, { foreignKey: 'userId' });
 
 module.exports = User;
