@@ -1,16 +1,18 @@
 const User = require("../models/User");
-const Notification = require("../models/Notification");
 const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
 const { generateToken } = require("../helpers/jwtHelper");
 const { createNotification } = require("./createNotificationController");
+const logger = require("../helpers/logger"); // Import your logger
 
 async function loginUser(req, res) {
   // Your user registration logic here, including validation, password hashing, and token generation
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    logger.error("Login failed: Validation errors", { errors: errors.array() });
     return res.status(400).json({ errors: errors.array() });
   }
+
   try {
     const { email, password } = req.body;
 
@@ -18,7 +20,8 @@ async function loginUser(req, res) {
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      createNotification(null, 'login_failed', 'User not found');
+      
+      logger.error("Login failed: User not found", { email });
       return res.status(400).json({ error: "User not found" });
     }
 
@@ -26,12 +29,14 @@ async function loginUser(req, res) {
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      createNotification(user.id, 'login_failed', 'Incorrect password');
+      await createNotification(user.id, 'login_failed', 'Incorrect password');
+      logger.error("Login failed: Incorrect password", { userId: user.id });
       return res.status(401).json({ error: "Incorrect password" });
     }
 
     // Create a notification for a successful login
-    createNotification(user.id, 'login_success');
+    await createNotification(user.id, 'login_success');
+    logger.info("Login successful", { userId: user.id });
 
     const payload = {
       user: {
@@ -45,8 +50,8 @@ async function loginUser(req, res) {
     // You can add additional logic here (e.g., generate tokens, send responses)
     res.status(200).json({ authtoken }); // Respond with the authenticated user
   } catch (error) {
-    console.error("Error login user:", error);
-    createNotification(user.id, 'login_failed', 'User login failed');
+    logger.error("Error login user:", error);
+    await createNotification(user.id, 'login_failed', 'User login failed');
     res.status(500).json({ error: "User login failed" });
   }
 }
