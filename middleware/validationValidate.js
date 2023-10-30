@@ -1,7 +1,6 @@
 const express = require("express"); // Import express
 const router = express.Router(); // Import the router module from express
 const { body,validationResult } = require("express-validator");
-const { registerUser } = require("../controllers/userController");
 
 
 //function to validate
